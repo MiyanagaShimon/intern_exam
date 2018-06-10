@@ -83,6 +83,7 @@ $(function()
       createDtl($contents, hitData[i]);
     }
   });
+  createDtlTitle();
   
 });
 
@@ -107,7 +108,7 @@ function addOption($obj, kind, data)
     var flg = 0;
     for(var j=0; j<kindLen; j++)
     {
-      if(kindData == foundKind[j])
+      if(kindData == 'その他' || kindData == foundKind[j])
       {
         flg = 1;
         break;
@@ -147,14 +148,39 @@ function createDtl($obj, data)
             .append($("<li class='contact_phone_number'>").text(data.contact_phone_number))
             .append($("<li class='event_place'>").text(data.event_place))
             .append($("<li class='latitude'>").text(data.latitude))
-            .append($("<li class='longitude'>").text(data.longitude)
-            .append($("<li class='city'>").text(data.city)));
+            .append($("<li class='longitude'>").text(data.longitude))
+            .append($("<li class='city'>").text(data.city));
 
   //文章が存在しない場合の例外処理
   if(!data.schedule_description)
   {
     $detailObj.children('.schedule_description').remove();
   }
+}
+
+
+//詳細項目に題名を追加
+function createDtlTitle()
+{
+  $(function(){
+    $('.detail li').each(function(index){
+      var text = $(this).text();
+      $(this).html('<span class="wrapDtl">'+text+'</span>');
+    });
+
+    $('.detail li').prepend($('<span>').attr('class','dtlTitle').text('hoge'));
+
+    $('.category .dtlTitle').text('カテゴリ');
+    $('.date .dtlTitle').text('日付');
+    $('.description .dtlTitle').text('詳細説明');
+    $('.schedule_description .dtlTitle').text('スケジュール');
+    $('.contact .dtlTitle').text('連絡先');
+    $('.contact_phone_number .dtlTitle').text('電話番号');
+    $('.event_place .dtlTitle').text('開催場所');
+    $('.latitude .dtlTitle').text('緯度');
+    $('.longitude .dtlTitle').text('経度');
+    $('.city .dtlTitle').text('開催都市');
+  });
 }
 
 

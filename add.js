@@ -18,13 +18,55 @@ $(function()
     getVars['page'] = 1;
   }
   
+  //件数表示を調整
+  addModeAttr();
+
   //JSONを取得・処理
   $.getJSON("fukui-event.json", function(data)
   {
-    //ページ番号を生成
-    if(getVars['mode'] != -1)
+    //検索カテゴリの選択肢を生成
+    addOption($("#category") , 'category', data)
+
+    //
+    $contents = $("#contents");
+
+    //検索ワードにヒットした情報を抽出
+    var hitData = searchCnt(getVars['keyword'], getVars['category'], data);
+    
+    //検索結果の詳細を表示
+    var resultText = '';
+    if(getVars['keyword'] != null)
     {
-      var pageMax = data.length/abs(getVars['mode'])+1
+      resultText = escapeHtml(getVars['keyword']);
+    }
+    if(getVars['category'] != null && getVars['category'] != 'all')
+    {
+      resultText = resultText+'　'+getVars['category'];
+    }
+    if(resultText != '')
+    {
+      resultText = resultText+'　'+hitData.length+'件の検索結果';
+      $('#searchResult').text(resultText);
+    }
+
+    //表示する情報の範囲（長さ）を計算
+    var maxIdx = hitData.length;
+    var srtIdx = 0;
+    var endIdx = maxIdx;
+
+    if(getVars['mode'] != null && getVars['mode'] > 0)
+    {
+      srtIdx = getVars['mode'] * (getVars['page'] - 1);
+      if((srtIdx+getVars['mode']) <= maxIdx)
+      {
+        endIdx = srtIdx + getVars['mode'];
+      }
+    }
+
+    //ページ番号を生成
+    if(getVars['mode'] != null && getVars['mode'] != -1)
+    {
+      var pageMax = hitData.length/abs(getVars['mode'])+1;
       if(getVars['page'] == null)
       {
         createSelectP(1, pageMax);
@@ -34,37 +76,61 @@ $(function()
         createSelectP(getVars['page'], pageMax);
       }
     }
-
-    //
-    $contents = $("#contents");
-    
-    //表示する情報の範囲（長さ）を計算
-    var srtIdx = 0;
-    var endIdx = data.length;
-
-    if(getVars['mode'] != null && getVars['mode'] > 0)
-    {
-      srtIdx = getVars['mode'] * (getVars['page'] - 1);
-      if((srtIdx+getVars['mode']) <= endIdx)
-      {
-        endIdx = srtIdx + getVars['mode'];
-      }
-    }
     
     //イベント情報の生成
     for(var i=srtIdx; i<endIdx; i++)
     {
-      createDtl($contents, data[i]);
+      createDtl($contents, hitData[i]);
     }
   });
   
 });
 
 
+//絶対値を算出
 function abs(val) {
   return (val < 0 ? -val : val);
 };
 
+
+//SelectのOptionを追加
+function addOption($obj, kind, data)
+{
+  var foundKind = [];
+  var kindLen = 0;
+  var kindData;
+
+  
+  for(var i=0; i<data.length; i++)
+  {
+    kindData = data[i][kind];
+    var flg = 0;
+    for(var j=0; j<kindLen; j++)
+    {
+      if(kindData == foundKind[j])
+      {
+        flg = 1;
+        break;
+      }
+    }
+
+    if(!flg)
+    {
+      foundKind.push(kindData);
+      kindLen++;
+      $obj.children('.others').before($("<option>").attr('value',kindData).text(escapeHtml(kindData)));
+    }
+  }
+}
+
+
+//件数表示のリンクを調整
+function addModeAttr()
+{
+  $('#objMaxMax').attr('href',createGetPara({'mode':-1}));
+  $('#objMax10').attr('href',createGetPara({'mode':10}));
+  $('#objMax30').attr('href',createGetPara({'mode':30}));
+}
 
 //各イベントの詳細項目を追加
 function createDtl($obj, data)
@@ -97,7 +163,7 @@ function createGetPara(newVars)
 {
   var getVars = getUrlVars();
   var getPara = "?";
-  var key = ['mode','page','word'];
+  var key = ['mode','page','keyword','category'];
 
   for(var i=0; i<key.length; i++)
   {
@@ -136,6 +202,17 @@ function createSelectP(page, pageMax)
 }
 
 
+//エスケープ処理
+function escapeHtml(str) {
+    str = str.replace(/&/g, '&amp;');
+    str = str.replace(/</g, '&lt;');
+    str = str.replace(/>/g, '&gt;');
+    str = str.replace(/"/g, '&quot;');
+    str = str.replace(/'/g, '&#39;');
+    return str;
+}
+
+
 //GETパラメータを取得
 function getUrlVars()
 {  
@@ -152,4 +229,42 @@ function getUrlVars()
  
   return vars; 
 
+}
+
+
+//文字列を検知
+function search(word, category, data)
+{
+  var str = data['event_name']+data['category']+data['start_date']+data['end_date']
+            +data['description']+data['schedule_description']+data['contact']
+            +data['contact_phone_number']+data['event_place']+data['latitude']
+            +data['longitude']+data['city'];
+  
+  var regexpW = new RegExp(word);
+  if(str.match(regexpW))
+  {
+    var regexpC = new RegExp(category)
+    if(category == 'all' || data['category'].match(regexpC))
+    {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
+
+//
+function searchCnt(word, category, data)
+{
+  var hitData = [];
+  for(var i=0; i<data.length; i++)
+  {
+    if(search(word, category, data[i]))
+    {
+      hitData.push(data[i]);
+    }
+  }
+
+  return hitData;
 }

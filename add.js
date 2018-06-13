@@ -140,7 +140,13 @@ function createDtl($obj, data)
   $eveObj.append($("<p class='event_name'>").text(data.event_name));
 
   var $detailObj = $("<ul class='detail'>").appendTo($eveObj);
-  $detailObj.append($("<li class='category'>").text(data.category))
+
+  $detailObj.append($("<li class='category'>")
+                .append($('<span>').attr('class','dtlTitle').text('カテゴリ'))
+                .append($('<span>').attr('class','wrapDtl').text(data.category))
+             );
+
+/*
             .append($("<li class='date'>").text(data.start_date+"～"+data.end_date))
             .append($("<li class='description'>").text(data.description))
             .append($("<li class='schedule_description'>").text(data.schedule_description))
@@ -150,7 +156,7 @@ function createDtl($obj, data)
             .append($("<li class='latitude'>").text(data.latitude))
             .append($("<li class='longitude'>").text(data.longitude))
             .append($("<li class='city'>").text(data.city));
-
+*/
   //文章が存在しない場合の例外処理
   if(!data.schedule_description)
   {
@@ -162,6 +168,7 @@ function createDtl($obj, data)
 //詳細項目に題名を追加
 function createDtlTitle()
 {
+/*
   $(document).ready(function(){
     $('.detail li').each(function(index){
       var text = $(this).text();
@@ -181,6 +188,7 @@ function createDtlTitle()
     $('.longitude .dtlTitle').text('経度');
     $('.city .dtlTitle').text('開催都市');
   });
+*/
 }
 
 

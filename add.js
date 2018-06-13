@@ -136,32 +136,32 @@ function addModeAttr()
 //各イベントの詳細項目を追加
 function createDtl($obj, data)
 {
+  var key = ['category','start_date','end_date','description','schedule_description','contact','contact_phone_number','event_place','latitude','longitude','city'];
+  var title = ['カテゴリ','開始日時','終了日時','詳細説明','スケジュール','連絡先','電話番号','開催場所','緯度','経度','開催都市'];
+
   var $eveObj = $("<li class='event'>").appendTo($obj);
   $eveObj.append($("<p class='event_name'>").text(data.event_name));
 
   var $detailObj = $("<ul class='detail'>").appendTo($eveObj);
 
-  $detailObj.append($("<li class='category'>")
-                .append($('<span>').attr('class','dtlTitle').text('カテゴリ'))
-                .append($('<span>').attr('class','wrapDtl').text(data.category))
-             );
-
-/*
-            .append($("<li class='date'>").text(data.start_date+"～"+data.end_date))
-            .append($("<li class='description'>").text(data.description))
-            .append($("<li class='schedule_description'>").text(data.schedule_description))
-            .append($("<li class='contact'>").text(data.contact))
-            .append($("<li class='contact_phone_number'>").text(data.contact_phone_number))
-            .append($("<li class='event_place'>").text(data.event_place))
-            .append($("<li class='latitude'>").text(data.latitude))
-            .append($("<li class='longitude'>").text(data.longitude))
-            .append($("<li class='city'>").text(data.city));
-*/
+  for(var i=0; i<key.length; i++)
+  {
+    if(!data[key[i]])
+    {
+      continue;
+    }
+    $detailObj.append($("<li class='category'>")
+                  .append($('<span>').attr('class','dtlTitle').text(title[i]))
+                  .append($('<span>').attr('class','wrapDtl').text(data[key[i]]))
+               );
+  }
+  /*
   //文章が存在しない場合の例外処理
   if(!data.schedule_description)
   {
     $detailObj.children('.schedule_description').remove();
   }
+  */
 }
 
 

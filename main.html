@@ -12,8 +12,8 @@
 
 <body>
 
-<form action="" method="get">
-<input id="keyword" name="keyword" type="text">
+<form id="search" action="" method="get">
+<input id="keyword" name="keyword" type="text" placeholder="検索ワードを入力">
 <select id="category" name="category" size="1">
 <option value="all">全ての項目</option>
 <option class="others" value="その他">その他</option>
@@ -22,10 +22,11 @@
 </form>
 
 <p id="searchResult"></p>
-
+<div id="changeWrap">
 <a id="objMaxMax" class="modeChange" href="?mode=-1">全件表示</a>
 <a id="objMax10" class="modeChange" href="?mode=10">10件表示</a>
 <a id="objMax30" class="modeChange" href="?mode=30">30件表示</a>
+</div>
 
 <ul class="pageList"></ul>
 

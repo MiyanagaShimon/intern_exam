@@ -83,7 +83,6 @@ $(function()
       createDtl($contents, hitData[i]);
     }
   });
-  createDtlTitle();
   
 });
 
@@ -155,40 +154,6 @@ function createDtl($obj, data)
                   .append($('<span>').attr('class','wrapDtl').text(data[key[i]]))
                );
   }
-  /*
-  //文章が存在しない場合の例外処理
-  if(!data.schedule_description)
-  {
-    $detailObj.children('.schedule_description').remove();
-  }
-  */
-}
-
-
-//詳細項目に題名を追加
-function createDtlTitle()
-{
-/*
-  $(document).ready(function(){
-    $('.detail li').each(function(index){
-      var text = $(this).text();
-      $(this).html('<span class="wrapDtl">'+text+'</span>');
-    });
-
-    $('.detail li').prepend($('<span>').attr('class','dtlTitle').text('hoge'));
-
-    $('.category .dtlTitle').text('カテゴリ');
-    $('.date .dtlTitle').text('日付');
-    $('.description .dtlTitle').text('詳細説明');
-    $('.schedule_description .dtlTitle').text('スケジュール');
-    $('.contact .dtlTitle').text('連絡先');
-    $('.contact_phone_number .dtlTitle').text('電話番号');
-    $('.event_place .dtlTitle').text('開催場所');
-    $('.latitude .dtlTitle').text('緯度');
-    $('.longitude .dtlTitle').text('経度');
-    $('.city .dtlTitle').text('開催都市');
-  });
-*/
 }
 
 

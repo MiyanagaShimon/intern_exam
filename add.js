@@ -41,7 +41,10 @@ $(function()
     }
     if(getVars['category'] != null && getVars['category'] != 'all')
     {
-      resultText = resultText+'　'+getVars['category'];
+      if(getVars['category'] == 'faves')
+        resultText = resultText+'　お気に入り';
+      else
+        resultText = resultText+'　'+getVars['category'];
     }
     if(resultText != '')
     {
@@ -138,9 +141,37 @@ function createDtl($obj, data)
   var key = ['category','start_date','end_date','description','schedule_description','contact','contact_phone_number','event_place','latitude','longitude','city'];
   var title = ['カテゴリ','開始日時','終了日時','詳細説明','スケジュール','連絡先','電話番号','開催場所','緯度','経度','開催都市'];
 
+  //タイトルを追加
   var $eveObj = $("<li class='event'>").appendTo($obj);
   $eveObj.append($("<p class='event_name'>").text(data.event_name));
 
+  //お気に入りボタンを追加
+  var $star;
+  if(!$.cookie(data.event_name))
+  {
+    $star = $("<img>").attr('name',data['event_name']).attr('src','img/star_not.png');
+  }
+  else
+  {
+    $star = $("<img>").attr('name',data['event_name']).attr('src','img/star_fave.png');
+  }
+  $star.on('click',function(){
+    var title = $(this).attr('name');
+    if(!$.cookie(title))
+    {
+      $(this).attr('src','img/star_fave.png');
+      $.cookie(title, '1');
+    }
+    else
+    {
+      $(this).attr('src','img/star_not.png');
+      $.removeCookie(title);
+    }
+  });
+
+  $eveObj.append($("<span>").attr('class','faveWrap').append($star));
+  
+  //詳細情報を追加
   var $detailObj = $("<ul class='detail'>").appendTo($eveObj);
 
   for(var i=0; i<key.length; i++)
@@ -234,6 +265,15 @@ function getUrlVars()
 //文字列を検知
 function search(word, category, data)
 {
+  if(category == 'faves')
+  {
+    if($.cookie(data['event_name']))
+    {
+      return 1;
+    }
+    return 0;
+  }
+
   var str = data['event_name']+data['category']+data['start_date']+data['end_date']
             +data['description']+data['schedule_description']+data['contact']
             +data['contact_phone_number']+data['event_place']+data['latitude']

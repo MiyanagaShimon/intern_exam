@@ -111,7 +111,12 @@ button[type="submit"]
 .modeChange
 {
   display: inline;
-  margin-left: 8px;
+  margin-left: 7px;
+}
+
+#objfaves
+{
+  margin-right: 20px;
 }
 
 .detail li
@@ -137,12 +142,29 @@ button[type="submit"]
 
 .event_name
 {
+  display: inline-block;
+  max-width:calc(100% - 0.5em - 6px - 3.5em);
   margin: 0 0 0.5em 0;
   padding: 0.5em 0 0.5em 0.5em;
   border-left: 6px solid #0da5b2;
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
   color: #0da5b2;
+}
+
+.faveWrap
+{
+  display: inline-block;
+  width: 2.5em;
+  height: 2.5em;
+  margin-left: 1em;
+}
+
+.faveWrap img
+{
+  display: inline-block;
+  width: 100%;
+  height: 100%;
 }
 
 .detail

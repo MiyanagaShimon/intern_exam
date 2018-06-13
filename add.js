@@ -88,7 +88,7 @@ $(function()
 });
 
 
-//絶対値を算出
+//絶対値を算出する
 function abs(val) {
   return (val < 0 ? -val : val);
 };
@@ -162,7 +162,7 @@ function createDtl($obj, data)
 //詳細項目に題名を追加
 function createDtlTitle()
 {
-  $(function(){
+  $(document).ready(function(){
     $('.detail li').each(function(index){
       var text = $(this).text();
       $(this).html('<span class="wrapDtl">'+text+'</span>');
